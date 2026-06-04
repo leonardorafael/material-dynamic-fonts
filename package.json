@@ -1,0 +1,39 @@
+{
+  "author": "Leonardo Rafal Wehrmeister",
+  "description": "This project is based on https://material-foundation.github.io/material-theme-builder and uses official color utilities from Material Design.",
+  "homepage": "https://github.com/leonardorafael/material-dynamic-fonts",
+  "version": "1.1.4",
+  "name": "material-dynamic-fonts",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node ./build/build.js",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.8",
+    "jsdom": "^29.1.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vitest": "^4.1.8"
+  },
+  "files": [
+    "dist/cdn",
+    "src/cdn",
+    "index.d.ts",
+    "index.js"
+  ],
+  "keywords": [
+    "material-design",
+    "dynamic-fonts",
+    "fonts"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonardorafael/material-dynamic-fonts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leonardorafael/material-dynamic-fonts/issues"
+  }
+}
