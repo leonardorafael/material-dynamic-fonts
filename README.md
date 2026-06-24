@@ -6,235 +6,41 @@
     <a href="https://github.com/leonardorafael/material-dynamic-fonts/issues"><img src="https://img.shields.io/github/issues/leonardorafael/material-dynamic-fonts" alt="Issues"></a>
 </p>
 
-# Material Dynamic Colors
+# Material Dynamic Fonts
 
-This project is based on https://material-foundation.github.io/material-theme-builder
+This project is based on https://fonts.google.com/icons. This is a microlib to fetch only the icons used in page automatically. No code required. Just drop it in your HTML. The expected result is to reduce the font file to about ~1kb.
 
 ## Getting Started
 
 ### CDN
 
+#### Auto load
 ```html
-// with html
+<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@1.1.4/dist/cdn/material-dynamic-fonts.min.js?font=Material Symbols Outlined"></script>
+```
+
+#### Manual load
+
+```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@1.1.4/dist/cdn/material-dynamic-fonts.min.js"></script>
 ```
 
 ```js
-// with javascript
-import "https://cdn.jsdelivr.net/npm/material-dynamic-fonts@1.1.4/dist/cdn/material-dynamic-fonts.min.js";
+materialDynamicFonts("Material Symbols Outlined");
 ```
 
 ### NPM
 
 ```bash
-# installing
 npm i material-dynamic-fonts
 ```
 
 ```js
-// importing as window.materialDynamicFonts
 import "material-dynamic-fonts";
 ```
 
 ```js
-// importing as materialDynamicFonts
-import materialDynamicFonts from "material-dynamic-fonts";
-```
-
-## How to use it?
-
-### JS
-
-```js
-let colors = await materialDynamicFonts(source);
-
-// from color
-let colors = await materialDynamicFonts("#ffd700");
-
-// from path
-let colors = await materialDynamicFonts("/image.png");
-
-// from url (caution with cors errors)
-let colors = await materialDynamicFonts("http://domain.com/image.png");
-
-// from file
-let fromFile = document.query("input[type='file']").files[0];
-let colors = await materialDynamicFonts(file);
-
-// from blob
-let fromBlob = new Blob();
-let colors = await materialDynamicFonts(blob);
-```
-
-#### Returned object
-```js
-{
-   light:{
-      primary: string,
-      onPrimary: string,
-      primaryContainer: string,
-      onPrimaryContainer: string,
-      secondary: string,
-      onSecondary: string,
-      secondaryContainer: string,
-      onSecondaryContainer: string,
-      tertiary: string,
-      onTertiary: string,
-      tertiaryContainer: string,
-      onTertiaryContainer: string,
-      error: string,
-      onError: string,
-      errorContainer: string,
-      onErrorContainer: string,
-      background: string,
-      onBackground: string,
-      surface: string,
-      onSurface: string,
-      surfaceVariant: string,
-      onSurfaceVariant: string,
-      outline: string,
-      outlineVariant: string,
-      shadow: string,
-      scrim: string,
-      inverseSurface: string,
-      inverseOnSurface: string,
-      inversePrimary: string,
-      surfaceDim: string,
-      surfaceBright: string,
-      surfaceContainerLowest: string,
-      surfaceContainerLow: string,
-      surfaceContainer: string,
-      surfaceContainerHigh: string,
-      surfaceContainerHighest: string
-      },
-   dark:{
-      primary: string,
-      onPrimary: string,
-      primaryContainer: string,
-      onPrimaryContainer: string,
-      secondary: string,
-      onSecondary: string,
-      secondaryContainer: string,
-      onSecondaryContainer: string,
-      tertiary: string,
-      onTertiary: string,
-      tertiaryContainer: string,
-      onTertiaryContainer: string,
-      error: string,
-      onError: string,
-      errorContainer: string,
-      onErrorContainer: string,
-      background: string,
-      onBackground: string,
-      surface: string,
-      onSurface: string,
-      surfaceVariant: string,
-      onSurfaceVariant: string,
-      outline: string,
-      outlineVariant: string,
-      shadow: string,
-      scrim: string,
-      inverseSurface: string,
-      inverseOnSurface: string,
-      inversePrimary: string,
-      surfaceDim: string,
-      surfaceBright: string,
-      surfaceContainerLowest: string,
-      surfaceContainerLow: string,
-      surfaceContainer: string,
-      surfaceContainerHigh: string,
-      surfaceContainerHighest: string
-      }
-}
-```
-
-### CLI
-
-Do not forget to put your color source between quotes:
-```bash
-material-dynamic-fonts "#FF0000"
-```
-#### Output
-
-```text
-
-Generating colors from #FF0000
-
-light theme:
-        --primary: #C00100;
-        --on-primary: #FFFFFF;
-        --primary-container: #FFDAD4;
-        --on-primary-container: #410000;
-        --secondary: #775651;
-        --on-secondary: #FFFFFF;
-        --secondary-container: #FFDAD4;
-        --on-secondary-container: #2C1512;
-        --tertiary: #705C2E;
-        --on-tertiary: #FFFFFF;
-        --tertiary-container: #FBDFA6;
-        --on-tertiary-container: #251A00;
-        --error: #BA1A1A;
-        --on-error: #FFFFFF;
-        --error-container: #FFDAD6;
-        --on-error-container: #410002;
-        --background: #FFFBFF;
-        --on-background: #201A19;
-        --surface: #FFF8F6;
-        --on-surface: #201A19;
-        --surface-variant: #F5DDDA;
-        --on-surface-variant: #534341;
-        --outline: #857370;
-        --outline-variant: #D8C2BE;
-        --shadow: #000000;
-        --scrim: #000000;
-        --inverse-surface: #362F2E;
-        --inverse-on-surface: #FBEEEC;
-        --inverse-primary: #FFB4A8;
-        --surface-dim: #E4D7D5;
-        --surface-bright: #FFF8F6;
-        --surface-container-lowest: #FFFFFF;
-        --surface-container-low: #FEF1EE;
-        --surface-container: #F8EBE9;
-        --surface-container-high: #F3E5E3;
-        --surface-container-highest: #EDE0DD;
-
-dark theme:
-        --primary: #FFB4A8;
-        --on-primary: #690100;
-        --primary-container: #930100;
-        --on-primary-container: #FFDAD4;
-        --secondary: #E7BDB6;
-        --on-secondary: #442925;
-        --secondary-container: #5D3F3B;
-        --on-secondary-container: #FFDAD4;
-        --tertiary: #DEC48C;
-        --on-tertiary: #3E2E04;
-        --tertiary-container: #564419;
-        --on-tertiary-container: #FBDFA6;
-        --error: #FFB4AB;
-        --on-error: #690005;
-        --error-container: #93000A;
-        --on-error-container: #FFB4AB;
-        --background: #201A19;
-        --on-background: #EDE0DD;
-        --surface: #181211;
-        --on-surface: #EDE0DD;
-        --surface-variant: #534341;
-        --on-surface-variant: #D8C2BE;
-        --outline: #A08C89;
-        --outline-variant: #534341;
-        --shadow: #000000;
-        --scrim: #000000;
-        --inverse-surface: #EDE0DD;
-        --inverse-on-surface: #362F2E;
-        --inverse-primary: #C00100;
-        --surface-dim: #181211;
-        --surface-bright: #3F3736;
-        --surface-container-lowest: #120D0C;
-        --surface-container-low: #201A19;
-        --surface-container: #251E1D;
-        --surface-container-high: #2F2827;
-        --surface-container-highest: #3B3332;
+materialDynamicFonts("Material Symbols Outlined");
 ```
 
 ## License

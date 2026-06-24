@@ -1,12 +1,10 @@
-import { expect, test, beforeEach, afterEach, vi } from "vitest";
-import { updateAllFonts } from "../src/cdn/material-dynamic-fonts";
-
-let container: HTMLElement;
+import { it, expect, vi, beforeEach } from "vitest";
+import materialDynamicFonts from "../src/cdn/material-dynamic-fonts.ts";
 
 beforeEach(() => {
-  container = document.createElement("div");
-  document.body.appendChild(container);
-  
+  document.body.innerHTML = "";
+  document.head.innerHTML = "";
+
   (globalThis as any).FontFace = class FontFace {
     constructor(family: string, src: string, descriptors?: any) {
       this.family = family;
@@ -24,284 +22,42 @@ beforeEach(() => {
     },
     writable: true,
   });
-
-  document.documentElement.style.setProperty("--font-icon", "");
-  
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  }));
 });
 
-afterEach(() => {
-  container.remove();
-  vi.clearAllMocks();
-  vi.unstubAllGlobals();
+it("using defaults", async () => {
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Outlined:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts();
+  expect(result).toBe(expectedUrl);
 });
 
-test("updateAllFonts is a function", () => {
-  expect(typeof updateAllFonts).toBe("function");
+it("using 'Material Symbols Outlined' font", async () => {
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Outlined:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts("Material Symbols Outlined");
+  expect(result).toBe(expectedUrl);
 });
 
-test("updateAllFonts is async", () => {
-  const result = updateAllFonts();
-  expect(result instanceof Promise).toBe(true);
+it("using 'Material Symbols Sharp' font", async () => {
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Sharp:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts("Material Symbols Sharp");
+  expect(result).toBe(expectedUrl);
 });
 
-test("updateAllFonts executes without error", async () => {
-  await expect(updateAllFonts()).resolves.not.toThrow();
+it("using 'Material Symbols Rounded' font", async () => {
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Rounded:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts("Material Symbols Rounded");
+  expect(result).toBe(expectedUrl);
 });
 
-test("updateAllFonts returns undefined", async () => {
-  const result = await updateAllFonts();
-  expect(result).toBeUndefined();
+it("adding new icons", async () => {
+  document.body.innerHTML = "<i class='material-symbols-rounded'>home</i>";
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Rounded:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,home,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts("Material Symbols Rounded");
+  expect(result).toBe(expectedUrl);
 });
 
-test("updateAllFonts with no icons", async () => {
-  document.documentElement.style.setProperty("--font-icon", "");
-  container.innerHTML = "";
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts with icon font set", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>check</i>';
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts with multiple icons", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = `
-    <i>check</i>
-    <i>close</i>
-    <i>delete</i>
-  `;
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts with whitespace in icon content", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>  check  </i>';
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts ignores empty icon elements", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = `
-    <i></i>
-    <i>check</i>
-    <i>   </i>
-  `;
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts with non-asterisk font", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>check</i>';
-  
-  const fetchSpy = vi.fn();
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  expect(fetchSpy).not.toHaveBeenCalled();
-});
-
-test("updateAllFonts fetches from Google Fonts API", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  if (fetchSpy.mock.calls.length > 0) {
-    const callArgs = fetchSpy.mock.calls[0]?.[0];
-    expect(typeof callArgs).toBe("string");
-    expect(callArgs).toContain("fonts.googleapis.com");
-  }
-});
-
-test("updateAllFonts includes icon names in API call", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon_unique_12345</i>';
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  expect(true).toBe(true);
-});
-
-test("updateAllFonts handles empty API response", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue(""),
-  }));
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts handles API response without URL", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("no url here"),
-  }));
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts extracts font URL from CSS response", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  const cssResponse = `
-    @font-face {
-      font-family: "Material Symbols Outlined";
-      src: url(https://example.com/font.woff2) format('woff2');
-    }
-  `;
-  
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue(cssResponse),
-  }));
-  
-  await expect(updateAllFonts()).resolves.toBeUndefined();
-});
-
-test("updateAllFonts deduplicates icons", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = `
-    <i>dedup_icon</i>
-    <i>dedup_icon</i>
-    <i>dedup_icon</i>
-  `;
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  expect(true).toBe(true);
-});
-
-test("updateAllFonts sorts icons alphabetically", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = `
-    <i>xicon</i>
-    <i>aicon</i>
-    <i>micon</i>
-  `;
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  expect(true).toBe(true);
-});
-
-test("updateAllFonts caches computed font style", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>cached_icon_test</i>';
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  expect(true).toBe(true);
-});
-
-test("updateAllFonts handles fetch errors gracefully", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network error")));
-  
-  try {
-    await updateAllFonts();
-  } catch (e) {
-  }
-});
-
-test("updateAllFonts works with quoted font names", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  expect(true).toBe(true);
-});
-
-test("updateAllFonts includes default icons on first call", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = '<i>custom_icon</i>';
-  
-  const fetchSpy = vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue("url(https://example.com/font.woff2)"),
-  });
-  vi.stubGlobal("fetch", fetchSpy);
-  
-  await updateAllFonts();
-  
-  if (fetchSpy.mock.calls.length > 0) {
-    const callArgs = fetchSpy.mock.calls[0]?.[0];
-    expect(typeof callArgs).toBe("string");
-    expect(callArgs).toContain("icon_names=");
-  }
-});
-
-test("updateAllFonts errors gracefully", async () => {
-  document.documentElement.style.setProperty("--font-icon", '"*Material Symbols Outlined"');
-  
-  container.innerHTML = `<i>error_icon</i>`;
-  
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    text: vi.fn().mockResolvedValue(""),
-  }));
-  
-  const result = await updateAllFonts();
-  
-  expect(result).toBeUndefined();
+it("adding new icons", async () => {
+  document.body.innerHTML = "<i class='material-symbols-rounded'>home</i>";
+  const expectedUrl = "https://fonts.googleapis.com/css2?family=Material Symbols Rounded:FILL@0..1&icon_names=check,check_box,check_box_outline_blank,home,indeterminate_check_box,radio_button_checked,radio_button_unchecked&display=swap";
+  const result = await materialDynamicFonts("Material Symbols Rounded");
+  expect(result).toBe(expectedUrl);
 });
