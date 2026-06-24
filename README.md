@@ -16,13 +16,13 @@ This project is based on https://fonts.google.com/icons. This is a microlib to f
 
 #### Auto load
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@1.1.4/dist/cdn/material-dynamic-fonts.min.js?font=Material Symbols Outlined"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.2/dist/cdn/material-dynamic-fonts.min.js?font=Material Symbols Outlined"></script>
 ```
 
 #### Manual load
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@1.1.4/dist/cdn/material-dynamic-fonts.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.2/dist/cdn/material-dynamic-fonts.min.js"></script>
 ```
 
 ```js

@@ -2,7 +2,7 @@
   "author": "Leonardo Rafal Wehrmeister",
   "description": "This project is based on https://fonts.google.com/icons.",
   "homepage": "https://github.com/leonardorafael/material-dynamic-fonts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "material-dynamic-fonts",
   "license": "MIT",
   "type": "module",
