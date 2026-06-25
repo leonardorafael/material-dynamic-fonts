@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/leonardorafael/material-dynamic-fonts/blob/main/LICENSE"><img src="https://img.shields.io/github/license/leonardorafael/material-dynamic-fonts" alt="License"></a>
-    <a href="https://bundlephobia.com/package/material-dynamic-fonts" target="_blank"><img src="https://img.shields.io/bundlephobia/minzip/material-dynamic-fonts" alt="minzipped size"></a>
+    <a><img src="https://img.shields.io/badge/brotli_size-0.7kb-green" alt="brotli size"></a>
     <a href="https://www.npmjs.com/package/material-dynamic-fonts"><img src="https://img.shields.io/npm/v/material-dynamic-fonts" alt="Version"></a>
     <a href="https://github.com/leonardorafael/material-dynamic-fonts/pulls"><img src="https://img.shields.io/github/issues-pr/leonardorafael/material-dynamic-fonts" alt="Pull Request"></a>
     <a href="https://github.com/leonardorafael/material-dynamic-fonts/issues"><img src="https://img.shields.io/github/issues/leonardorafael/material-dynamic-fonts" alt="Issues"></a>
@@ -15,14 +15,19 @@ This project is based on https://fonts.google.com/icons. This is a microlib to f
 ### CDN
 
 #### Auto load
+
+You can set automatically the script adding some params as query string. The available params are `font` and `selector`. The `selector` param is optional.
+
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.2/dist/cdn/material-dynamic-fonts.min.js?font=Material Symbols Outlined"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.3/dist/cdn/material-dynamic-fonts.min.js?font=Material Symbols Outlined"></script>
 ```
 
 #### Manual load
 
+The `materialDynamicFonts()` function has `font` and `selector` params. If no params are informed, it will use the `Material Symbols Outlined` font and the `.material-symbols-outlined` selector:
+
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.2/dist/cdn/material-dynamic-fonts.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-fonts@0.0.3/dist/cdn/material-dynamic-fonts.min.js"></script>
 ```
 
 ```js
